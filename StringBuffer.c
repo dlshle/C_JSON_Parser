@@ -19,6 +19,7 @@ void expand_detect(struct StringBuffer *buffer) {
 int expand_buffer(struct StringBuffer *buffer) {
 	check_buffer_nullity(buffer);
 	buffer->string_buffer = realloc(buffer->string_buffer, buffer->cap * sizeof(char) * EXPAND_FACTOR);
+	buffer->cap *= EXPAND_FACTOR;
 	return buffer->string_buffer != NULL;
 }
 

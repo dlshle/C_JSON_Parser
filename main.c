@@ -5,7 +5,7 @@
 #include "Tokenizer.h"
 
 int main(int argc, char** argv) {
-	char *json = "{\"num1\":123,\"num2\":0.1216,\"num3\":0126,\"num4\":0.1e-12,\"num5\":1.2e+1,\"num6\":1.2e3,\"num7\":-12.31258e-158181, \"bol1\":false,\"NUl1\":null,\"str1\":\"asdwqccqIRJ(#(FHullnulltrue\"}";
+	char *json = "{\"num1\":123,\"num2\":0.1216,\"num3\":126,\"num4\":0.1e-12,\"num5\":1.2e+1,\"num6\":1.2e3,\"num7\":-12.31258e-158181, \"bol1\":false,\"NUl1\":null,\"str1\":\"asdwqccqIRJ(#(FHullnulltrue\", \"obj1\": {\"a\":123,\"b\":456}, \"arr1\": [{\"x\":1, \"y\":[1,2,3]}, [\"niu\", 123, \"bi!\", null], \"Asdsad\", true]}";
 	printf("%s\n", json);
 	init_reader(json);
 	/*

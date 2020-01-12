@@ -49,9 +49,9 @@ void list_print(struct TokenList *list) {
 	}
 }
 
-void extend_cap(struct TokenList *list) {
+int extend_cap(struct TokenList *list) {
 	list->token_list = realloc(list->token_list, (list->cap * EXPAND_FACTOR) * sizeof(struct TokenPair*));
-	list->cap = list->cap * EXPAND_FACTOR;
+	list->cap *= EXPAND_FACTOR;
 	return list->token_list != NULL;
 }
 

@@ -4,12 +4,64 @@
 #include "StringBuffer.h"
 #include <stdlib.h>
 #include <stdio.h>
-// TODO: use expect to error check json format
+
+/*
+deprecated, unable to check array correctly
+#define COMMA_OBJ (SEP_COMMA | END_OBJECT)
+int expect[10] = {
+// begin_obj
+(STRING | END_OBJECT), 
+// end_obj
+(SEP_COMMA | END_OBJECT | END_DOCUMENT),
+// begin_arr
+(BEGIN_OBJECT | STRING | J_NULL | BOOLEAN | NUMBER | BEGIN_ARRAY | END_ARRAY),
+// end_arr
+(COMMA_OBJ),
+// null
+(COMMA_OBJ),
+// num
+(COMMA_OBJ),
+// str
+(SEP_COLON | SEP_COMMA | END_OBJECT),
+// boolean
+(COMMA_OBJ),
+// :
+(STRING | NUMBER | BOOLEAN | BEGIN_OBJECT | J_NULL | BEGIN_ARRAY),
+// ,
+(STRING)
+};
+
+// helper function for mapping token index
+int tokenizer_get_expect(enum TokenType type) {
+	int index = 0;
+	while ((type & 1) == 0) {
+		type >>= 1;
+		index++;
+	}
+	return expect[index];
+}
+*/
+
 // construct token_list to store all TokenPairs detected from the json string
 void tokenize() {
 	token_list = init_token_list();
+	//int expected = -1;
 	do {
-		list_add_pair(token_list, tokenize_token());
+		struct TokenPair *pair = tokenize_token();
+		/*
+		if (expected != -1) {
+			// check if this token type is expected
+			if (!(pair->type & expected)) {
+				printf("last:\n");
+				print_token_pair(token_list->token_list[token_list->size-1]);
+				printf("current:\n");
+				print_token_pair(pair);
+				handle_error("Tokenizer error: unexpected format.", 1);
+			}
+		}
+		expected = tokenizer_get_expect(pair->type);
+		*/
+		list_add_pair(token_list, pair);
 	} while(token_list->token_list[token_list->size-1]->type != END_DOCUMENT);
 }
 
