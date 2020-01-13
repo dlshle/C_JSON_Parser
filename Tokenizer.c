@@ -77,7 +77,7 @@ struct TokenPair* tokenize_token() {
 	char c;
 	while (1) {
 		if (!has_more())
-			return init_token_pair(END_DOCUMENT, NULL);
+			return init_token_pair(END_DOCUMENT, "END_DOCUMENT");
 		c = next();
 		if (!is_whitespace(c)) 
 			break ;

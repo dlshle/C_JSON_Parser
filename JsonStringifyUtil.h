@@ -1,3 +1,6 @@
+#ifndef __JSON_STRINGIFY_H__
+#define __JSON_STRINGIFY_H__
+
 #include "StringBuffer.h"
 #include "JsonObject.h"
 #include "JsonArray.h"
@@ -12,3 +15,4 @@ char* stringify_json_arr(struct JsonArray *arr);
 void append_json_arr_indent(struct StringBuffer *buffer, struct JsonArray *arr, int indent);
 char* stringify_json_obj_entry(struct JsonObject *obj, int index);
 void append_json_obj_entry_indent(struct StringBuffer *buffer, struct JsonObject *obj, int index, int indent);
+#endif

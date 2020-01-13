@@ -1,0 +1,17 @@
+{
+	"what": "the",
+	"boolean": false,
+	"fuck": {
+		"hey": [
+			{"hello": "world", "this": true, "is": false, "right?": null},
+			"fuckdat",
+			0.123e-1234234,
+			123e35,
+			12e+324235,
+			false,
+			false
+			],
+		"you": ["are", "you", "gay", "?"],
+		"yeah~": true
+	}
+}

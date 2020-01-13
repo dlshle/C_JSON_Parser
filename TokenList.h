@@ -1,3 +1,6 @@
+#ifndef __TOKEN_LIST_H__
+#define __TOKEN_LIST_H__
+
 #include "TokenTypes.h"
 
 struct TokenList {
@@ -16,3 +19,5 @@ int list_has_more(struct TokenList *list);
 void list_print(struct TokenList *list);
 
 void list_free(struct TokenList *list, int free_val);
+
+#endif

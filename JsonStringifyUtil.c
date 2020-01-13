@@ -31,7 +31,7 @@ void append_json_boolean(struct StringBuffer *buffer, char *ptr) {
 	buffer_append_string(buffer, (*ptr?"true":"false"));
 }
 
-void append_json_value(struct StringBuffer *buffer, char *ptr, enum JsonValueType type) {
+void append_json_value(struct StringBuffer *buffer, char *ptr, enum JsonValueType type, int indent) {
 	switch(type)
 	{
 		case V_STRING:
@@ -54,7 +54,7 @@ void append_json_value(struct StringBuffer *buffer, char *ptr, enum JsonValueTyp
 			append_json_obj_indent(buffer, (struct JsonObject*)ptr, indent+1);
 			return ;
 		case V_ARRAY:
-			append_json_arr_indent(buffer, (struct JsonObject*)ptr, indent+1);
+			append_json_arr_indent(buffer, (struct JsonArray*)ptr, indent+1);
 			return ;
 		default:
 			handle_error("JsonStringifyUtil error: Invalid value type.", 1);
@@ -82,44 +82,49 @@ void print_json_obj_ent(struct JsonObject *obj, int index) {
 char* stringify_json_obj(struct JsonObject *obj) {
 	struct StringBuffer *buffer = init_StringBuffer(32);
 	append_json_obj_indent(buffer, obj, 0);
+	buffer_append_char(buffer, '\n');
 	return stringify_string_buffer(buffer);
+}
+
+void check_newline_append(struct StringBuffer *buffer, enum JsonValueType type, int last_flag) {
+	if (!last_flag) {
+		buffer_append_char(buffer, ',');
+	}
+	buffer_append_char(buffer, '\n');
 }
 
 void append_json_obj_indent(struct StringBuffer *buffer, struct JsonObject *obj, int indent) {
 	buffer_append_string(buffer, "{\n");
-	for (int i = 0; i < (obj->size-1); i++) {
-		stringify_json_obj_entry_indent(buffer, obj, i, indent + 1);
-		buffer_append_string(buffer, ",\n");
+	for (int i = 0; i < obj->size; i++) {
+		append_json_obj_entry_indent(buffer, obj, i, indent + 1);
+		check_newline_append(buffer, obj->val_types[i], (i==(obj->size-1)));
 	}
-	stringify_json_obj_entry_indent(buffer, obj, obj->size - 1, indent + 1);
-	buffer_append_string(buffer, "\n");
 	append_indent(buffer, indent);
-	buffer_append_string(buffer, "}\n");
+	buffer_append_char(buffer, '}');
 }
 
 char* stringify_json_arr(struct JsonArray *arr) {
 	struct StringBuffer *buffer = init_StringBuffer(32);
 	append_json_arr_indent(buffer, arr, 0);
+	buffer_append_char(buffer, '\n');
 	return stringify_string_buffer(buffer);
 }
 
 void append_json_arr_indent(struct StringBuffer *buffer, struct JsonArray *arr, int indent) {
 	buffer_append_string(buffer, "[\n");
-	for (int i = 0; i < (arr->size-1); i++) {
+	for (int i = 0; i < arr->size; i++) {
 		append_indent(buffer, indent+1);
-		append_json_value(buffer, arr->elements[i], arr->types[i]);
-		buffer_append_string(buffer, ",\n");
+		append_json_value(buffer, arr->elements[i], arr->types[i], indent);
+		check_newline_append(buffer, arr->types[i], (i==(arr->size-1)));
 	}
-	append_indent(buffer, indent+1);
-	append_json_value(buffer, arr->elements[arr->size-1], arr->types[arr->size-1]);
-	buffer_append_string(buffer, "\n");
 	append_indent(buffer, indent);
-	buffer_append_string(buffer, "]\n");
+	buffer_append_char(buffer, ']');
 }
 
 char* stringify_json_obj_entry(struct JsonObject *obj, int index) {
 	struct StringBuffer *buffer = init_StringBuffer(32);
 	append_json_obj_entry_indent(buffer, obj, index, 0);
+	buffer_append_char(buffer, '\n');
 	return stringify_string_buffer(buffer);
 }
 
@@ -127,6 +132,6 @@ void append_json_obj_entry_indent(struct StringBuffer *buffer, struct JsonObject
 	append_indent(buffer, indent);
 	buffer_append_string(buffer, obj->keys[index]);
 	buffer_append_string(buffer, ": ");
-	append_json_value(buffer, obj->vals[index], obj->val_types);
+	append_json_value(buffer, obj->vals[index], obj->val_types[index], indent);
 }
 

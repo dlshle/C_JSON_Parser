@@ -1,10 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "JsonObject.h"
-#include "JsonArray.h"
 #include "ErrorHandler.h"
-#include "TokenList.h"
-#include "TokenTypes.h"
+#include "Parser.h"
 
 #define COMMA_N_OBJ (SEP_COMMA | END_OBJECT)
 int obj_expected_types[10] = {
@@ -38,6 +35,7 @@ char C_TRUE = 1;
 char C_FALSE = 0;
 char C_NULL = 0;
 
+
 int get_expected_types(enum TokenType type, int obj_flag) {
 	int index = 0;
 	while (type & 1 == 0) {
@@ -57,14 +55,16 @@ struct JsonObject* parse_token_list(struct TokenList *list) {
 		handle_error("Parser error: null token list.", 1);
 	if (list_next_pair(list)->type != BEGIN_OBJECT)
 		handle_error("Parser error: unexpected root token.", 1);
-	return parse_json_obj(list);
+	struct JsonObject* obj = parse_json_obj(list);
+	struct JsonObject* garbage = init_json_object();
+	return obj;
 }
 
 // assume already encountered BEGIN_OBJECT
 struct JsonObject* parse_json_obj(struct TokenList *list) {
 	struct JsonObject *obj = init_json_object();
 	char *key;
-	int expected = get_expected_types(BEGIN_OBJECT, 1);
+	int expected = (STRING | END_OBJECT);
 	while (list_has_more(list)) {
 		struct TokenPair *pair = list_next_pair(list);
 		enum TokenType type = pair->type;
@@ -95,7 +95,7 @@ struct JsonObject* parse_json_obj(struct TokenList *list) {
 				break;
 			case STRING:
 				check_expected(type, expected);
-				if ((list->token_list[list->pos-1])->type == SEP_COLON) {
+				if ((list->token_list[list->pos-2])->type == SEP_COLON) {
 					json_obj_put(obj, key, token, V_STRING);
 					expected = SEP_COMMA | END_OBJECT;
 				} else {
@@ -105,7 +105,7 @@ struct JsonObject* parse_json_obj(struct TokenList *list) {
 				break;
 			case BOOLEAN:
 				check_expected(type, expected);
-				json_obj_put(obj, key, (token[0] == 't'?&C_TRUE:&C_FALSE), V_STRING);
+				json_obj_put(obj, key, (token[0] == 't'?&C_TRUE:&C_FALSE), V_BOOLEAN);
 				expected = get_expected_types(type, 1);
 				break;
 			case SEP_COLON:
@@ -128,7 +128,7 @@ struct JsonObject* parse_json_obj(struct TokenList *list) {
 
 // assume already encountered BEGIN_ARRAY
 struct JsonArray* parse_json_arr(struct TokenList *list) {
-	int expected = get_expected_types(BEGIN_ARRAY, 0);
+	int expected = (BEGIN_OBJECT | END_OBJECT | BEGIN_OBJECT | J_NULL | NUMBER | BOOLEAN | STRING);
 	struct JsonArray *arr = init_json_array();
 	while (list_has_more(list)) {
 		struct TokenPair *pair = list_next_pair(list);
@@ -145,6 +145,9 @@ struct JsonArray* parse_json_arr(struct TokenList *list) {
 				json_arr_append(arr, (char*)(parse_json_arr(list)), V_ARRAY);
 				expected = get_expected_types(type, 0);
 				break;
+			case END_ARRAY:
+				check_expected(type, expected);
+				return arr;
 			case J_NULL:
 				check_expected(type, expected);
 				json_arr_append(arr, &C_NULL, V_NULL);
@@ -162,7 +165,7 @@ struct JsonArray* parse_json_arr(struct TokenList *list) {
 				break;
 			case BOOLEAN:
 				check_expected(type, expected);
-				json_arr_append(arr, (token[0] == 't'?&C_TRUE:&C_FALSE), V_STRING);
+				json_arr_append(arr, (token[0] == 't'?&C_TRUE:&C_FALSE), V_BOOLEAN);
 				expected = get_expected_types(type, 0);
 				break;
 			case SEP_COMMA:

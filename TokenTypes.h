@@ -1,3 +1,6 @@
+#ifndef __TOKEN_TYPES_H__
+#define __TOKEN_TYPES_H__
+
 enum TokenType {
 	BEGIN_OBJECT = 1,
     END_OBJECT = 2,
@@ -24,3 +27,5 @@ void free_token_pair(struct TokenPair *pair, int free_val);
 char* get_token_type_str(enum TokenType type);
 
 void print_token_pair(struct TokenPair *pair);
+
+#endif

@@ -1,3 +1,6 @@
+#ifndef __STRING_BUFFER_H__
+#define __STRING_BUFFER_H__
+
 struct StringBuffer {
 	char *string_buffer;
 	int size;
@@ -11,3 +14,5 @@ void buffer_remove_interval(struct StringBuffer *buffer, int from, int len);
 void buffer_remove_char_at(struct StringBuffer *buffer, int pos);
 void free_buffer(struct StringBuffer *buffer);
 void print_buffer(struct StringBuffer *buffer);
+
+#endif

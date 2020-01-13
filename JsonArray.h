@@ -1,3 +1,5 @@
+#ifndef __JSON_ARR_H__
+#define __JSON_ARR_H__
 // define the JSON array struct using a dynamic array
 #include "JsonObject.h"
 
@@ -12,3 +14,4 @@ struct JsonArray* init_json_array();
 int json_arr_append(struct JsonArray *arr, char *ele, enum TokenType type);
 int json_arr_remove(struct JsonArray *arr, char *ele);
 void free_json_array(struct JsonArray *arr, int free_val);
+#endif

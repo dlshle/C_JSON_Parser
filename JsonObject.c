@@ -64,7 +64,7 @@ void free_json_obj(struct JsonObject *obj, int free_val) {
 	}
 	free(obj->keys);
 	free(obj->vals);
-	free(obj->types);
+	free(obj->val_types);
 	free(obj);
 }
 

@@ -1,3 +1,5 @@
+#ifndef __JSON_OBJ_H__
+#define __JSON_OBJ_H__
 // define the JSON object struct using a customized map
 #include "TokenTypes.h"
 
@@ -41,3 +43,4 @@ int json_obj_index_key(struct JsonObject *obj, char *key);
 int json_obj_put(struct JsonObject *obj, char *key, char *val, enum JsonValueType type);
 int json_obj_remove(struct JsonObject *obj, char *key);
 void free_json_obj(struct JsonObject *obj, int free_val);
+#endif
