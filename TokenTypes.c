@@ -14,25 +14,25 @@ char* get_token_type_str(enum TokenType type) {
 	switch (type) {
 		case BEGIN_OBJECT:
 			return "BEGIN_OBJECT";
-    	case END_OBJECT:
+    case END_OBJECT:
 			return "END_OBJECT";
-    	case BEGIN_ARRAY:
+    case BEGIN_ARRAY:
 			return "BEGIN_ARRAY";
-    	case END_ARRAY:
+    case END_ARRAY:
 			return "END_ARRAY";
-    	case J_NULL:
+    case J_NULL:
 			return "J_NULL";
-    	case NUMBER:
+    case NUMBER:
 			return "NUMBER";
-    	case STRING:
+    case STRING:
 			return "STRING";
-    	case BOOLEAN:
+    case BOOLEAN:
 			return "BOOLEAN";
-    	case SEP_COLON:
+    case SEP_COLON:
 			return "SEP_COLON";
-    	case SEP_COMMA:
+    case SEP_COMMA:
 			return "SEP_COMMA";
-    	case END_DOCUMENT:
+    case END_DOCUMENT:
 			return "END_DOCUMENT";
 	}
 	return "UNKNOWN";
